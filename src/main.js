@@ -171,16 +171,18 @@ function renderTasks() {
     
     return `
       <div class="task-item" draggable="true" data-id="${task.id}">
-        <div class="task-order-id">Order ID: ${task.orderId}</div>
-        <div class="task-name">${task.taskName}</div>
-        <div class="task-duration">Duration: ${task.estimatedDuration}</div>
-        <div class="task-time">${start} - ${end}</div>
-        <div class="task-notes">
-          <textarea 
-            class="notes-input" 
-            placeholder="Add notes..."
-            data-task-id="${task.id}"
-          >${task.notes}</textarea>
+        <div class="task-content">
+          <div class="task-order-id">${task.orderId}</div>
+          <div class="task-name">${task.taskName}</div>
+          <div class="task-duration">${task.estimatedDuration}</div>
+          <div class="task-time">${start} - ${end}</div>
+          <div class="task-notes">
+            <textarea 
+              class="notes-input" 
+              placeholder="Notes..."
+              data-task-id="${task.id}"
+            >${task.notes}</textarea>
+          </div>
         </div>
       </div>
     `;
