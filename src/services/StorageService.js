@@ -79,11 +79,20 @@ class StorageService {
     const tasks = [];
     for (const id of taskOrder) {
       const request = store.get(id);
-      const task = await new Promise((resolve) => {
+      const taskData = await new Promise((resolve) => {
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => resolve(null);
       });
-      if (task) tasks.push(task);
+      
+      if (taskData) {
+        // Reconstruct as Task instance
+        const task = new Task(taskData.orderId, taskData.taskName, taskData.estimatedDuration);
+        task.id = taskData.id;
+        task.notes = taskData.notes || '';
+        task.calculatedStartTime = taskData.calculatedStartTime ? new Date(taskData.calculatedStartTime) : null;
+        task.calculatedEndTime = taskData.calculatedEndTime ? new Date(taskData.calculatedEndTime) : null;
+        tasks.push(task);
+      }
     }
 
     return tasks;

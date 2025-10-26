@@ -197,7 +197,6 @@ function renderTasks() {
  */
 function setupDragAndDrop() {
   const taskItems = document.querySelectorAll('.task-item');
-
   taskItems.forEach(item => {
     // Desktop drag events
     item.addEventListener('dragstart', handleDragStart);
@@ -217,17 +216,23 @@ function setupDragAndDrop() {
  * Handle drag start
  */
 function handleDragStart(event) {
-  dragSource = event.target;
-  event.target.classList.add('dragging');
+  const taskItem = event.target.closest('.task-item');
+  if (!taskItem) return;
+  
+  dragSource = taskItem;
+  taskItem.classList.add('dragging');
   event.dataTransfer.effectAllowed = 'move';
-  event.dataTransfer.setData('text/html', event.target.dataset.id);
+  event.dataTransfer.setData('text/plain', taskItem.dataset.id);
 }
 
 /**
  * Handle drag end
  */
 function handleDragEnd(event) {
-  event.target.classList.remove('dragging');
+  const taskItem = event.target.closest('.task-item');
+  if (!taskItem) return;
+  
+  taskItem.classList.remove('dragging');
   document.querySelectorAll('.task-item').forEach(item => {
     item.classList.remove('drag-over');
   });
@@ -262,10 +267,12 @@ function handleDragLeave(event) {
 async function handleDrop(event) {
   event.preventDefault();
   
-  const sourceId = event.dataTransfer.getData('text/html');
+  const sourceId = event.dataTransfer.getData('text/plain') || event.dataTransfer.getData('text/html');
   const targetItem = event.target.closest('.task-item');
   
-  if (!targetItem || !sourceId) return;
+  if (!targetItem || !sourceId) {
+    return;
+  }
 
   const targetId = targetItem.dataset.id;
 
@@ -288,7 +295,9 @@ async function reorderTasks(sourceId, targetId) {
   const sourceIndex = currentTasks.findIndex(t => t.id === sourceId);
   const targetIndex = currentTasks.findIndex(t => t.id === targetId);
 
-  if (sourceIndex === -1 || targetIndex === -1) return;
+  if (sourceIndex === -1 || targetIndex === -1) {
+    return;
+  }
 
   // Remove source from array
   const [movedTask] = currentTasks.splice(sourceIndex, 1);
@@ -301,8 +310,6 @@ async function reorderTasks(sourceId, targetId) {
 
   // Recalculate times
   recalculateAndRender();
-
-  console.log('Tasks reordered');
 }
 
 /**
