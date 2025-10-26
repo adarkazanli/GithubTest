@@ -1,0 +1,11 @@
+Task Scheduler Application
+Copyright (c) 2025
+
+This product includes software developed by SheetJS LLC.
+SheetJS software is licensed under Apache License 2.0.
+See LICENSE file for full text.
+
+Third-Party Libraries:
+- SheetJS Community Edition (xlsx.js) - Apache 2.0
+  https://github.com/SheetJS/sheetjs
+

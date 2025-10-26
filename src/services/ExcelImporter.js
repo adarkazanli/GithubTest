@@ -1,0 +1,191 @@
+/**
+ * ExcelImporter - Handles Excel file parsing and validation
+ * Uses SheetJS for client-side Excel parsing
+ */
+class ExcelImporter {
+  /**
+   * Import and parse Excel file
+   * @param {File} file - Excel file object
+   * @returns {Promise<Object>} Object with tasks array and summary
+   */
+  static async importFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        try {
+          // Check if XLSX is available
+          if (typeof XLSX === 'undefined') {
+            throw new Error('SheetJS library not loaded');
+          }
+
+          // Read Excel workbook
+          const workbook = XLSX.read(e.target.result, { type: 'binary' });
+          
+          // Get first sheet
+          const sheetName = workbook.SheetNames[0];
+          if (!sheetName) {
+            throw new Error('Excel file has no sheets');
+          }
+
+          const worksheet = workbook.Sheets[sheetName];
+          const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+          // Validate and parse data
+          const result = this.validateAndParse(rawData, file.name);
+          resolve(result);
+        } catch (error) {
+          console.error('Excel import error:', error);
+          reject(error);
+        }
+      };
+
+      reader.onerror = () => {
+        reject(new Error('Failed to read file'));
+      };
+
+      reader.readAsBinaryString(file);
+    });
+  }
+
+  /**
+   * Validate and parse raw data from Excel
+   * @param {Array} rawData - Raw data array from Excel
+   * @param {string} fileName - Name of the imported file
+   * @returns {Object} Object with tasks array and summary
+   */
+  static validateAndParse(rawData, fileName = 'unknown.xlsx') {
+    const tasks = [];
+    const validRows = [];
+    const invalidRows = [];
+
+    if (!Array.isArray(rawData) || rawData.length === 0) {
+      return {
+        tasks: [],
+        summary: {
+          valid: 0,
+          invalid: 0,
+          fileName: fileName
+        }
+      };
+    }
+
+    rawData.forEach((row, index) => {
+      try {
+        // Validate required columns
+        const orderId = this.validateOrderId(row.orderId || row['order id'] || row['Order ID']);
+        const taskName = this.validateTaskName(row.taskName || row['task name'] || row['Task Name']);
+        const estimatedTime = this.validateEstimatedTime(row.estimatedTime || row['estimated time'] || row['Estimated Time'] || row['estimated time of completion']);
+
+        // Check for zero duration
+        const durationMinutes = TimeUtils.parseToMinutes(estimatedTime);
+        if (durationMinutes === 0) {
+          throw new Error('Zero duration not allowed');
+        }
+
+        // Create task
+        const task = new Task(orderId, taskName, estimatedTime);
+        validRows.push(task);
+      } catch (error) {
+        invalidRows.push({
+          row: index + 1,
+          error: error.message,
+          data: row
+        });
+      }
+    });
+
+    // Handle duplicate order IDs
+    this.deduplicateOrderIds(validRows);
+
+    return {
+      tasks: validRows,
+      summary: {
+        valid: validRows.length,
+        invalid: invalidRows.length,
+        fileName: fileName,
+        invalidDetails: invalidRows
+      }
+    };
+  }
+
+  /**
+   * Validate order ID
+   * @param {any} orderId - Order ID value
+   * @returns {number} Valid order ID
+   */
+  static validateOrderId(orderId) {
+    if (orderId === null || orderId === undefined) {
+      throw new Error('Missing orderId');
+    }
+
+    const id = parseInt(orderId, 10);
+    if (isNaN(id)) {
+      throw new Error('Invalid orderId format');
+    }
+
+    return id;
+  }
+
+  /**
+   * Validate task name
+   * @param {any} taskName - Task name value
+   * @returns {string} Valid task name
+   */
+  static validateTaskName(taskName) {
+    if (!taskName || typeof taskName !== 'string' || taskName.trim().length === 0) {
+      throw new Error('Missing taskName');
+    }
+
+    return taskName.trim();
+  }
+
+  /**
+   * Validate estimated time
+   * @param {any} estimatedTime - Time value in HH:MM format
+   * @returns {string} Valid time string
+   */
+  static validateEstimatedTime(estimatedTime) {
+    if (!estimatedTime || typeof estimatedTime !== 'string') {
+      throw new Error('Missing estimatedTime');
+    }
+
+    // Validate format
+    if (!TimeUtils.isValidTimeFormat(estimatedTime)) {
+      throw new Error(`Invalid time format: ${estimatedTime}. Expected HH:MM`);
+    }
+
+    return estimatedTime.trim();
+  }
+
+  /**
+   * Handle duplicate order IDs by auto-incrementing
+   * @param {Array<Task>} tasks - Array of tasks
+   */
+  static deduplicateOrderIds(tasks) {
+    const seen = new Map();
+
+    tasks.forEach(task => {
+      let currentId = task.orderId;
+      
+      // Increment until we find a unique ID
+      while (seen.has(currentId)) {
+        currentId++;
+      }
+      
+      task.orderId = currentId;
+      seen.set(currentId, true);
+    });
+  }
+
+  /**
+   * Merge new tasks with existing tasks
+   * @param {Array<Task>} existingTasks - Existing tasks
+   * @param {Array<Task>} newTasks - New tasks to merge
+   * @returns {Array<Task>} Merged task array
+   */
+  static mergeTasks(existingTasks, newTasks) {
+    return [...(existingTasks || []), ...(newTasks || [])];
+  }
+}
+

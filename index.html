@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Scheduler</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <!-- Import Panel -->
+  <section id="import-panel">
+    <h1>Task Scheduler</h1>
+    <div class="import-controls">
+      <input type="file" id="excel-file" accept=".xlsx" />
+      <button id="import-btn">Import Excel</button>
+    </div>
+    <div id="import-summary"></div>
+  </section>
+
+  <!-- Schedule Controls -->
+  <section id="schedule-controls">
+    <label for="estimated-start-time">Estimated Start Time:</label>
+    <input type="text" id="estimated-start-time" value="09:00" pattern="\d{2}:\d{2}" placeholder="HH:MM" />
+    <button id="update-time-btn">Update Times</button>
+  </section>
+
+  <!-- Task List -->
+  <section id="task-list">
+    <!-- Tasks will be rendered here dynamically -->
+  </section>
+
+  <!-- Load SheetJS -->
+  <script src="assets/lib/xlsx.full.min.js"></script>
+  
+  <!-- Load application modules -->
+  <script src="src/utils/TimeUtils.js"></script>
+  <script src="src/models/Task.js"></script>
+  <script src="src/services/StorageService.js"></script>
+  <script src="src/services/TaskCalculator.js"></script>
+  <script src="src/services/ExcelImporter.js"></script>
+  
+  <!-- Main application -->
+  <script src="src/main.js"></script>
+</body>
+</html>
+
