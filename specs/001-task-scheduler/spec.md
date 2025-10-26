@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "this application will ingest an excel spreadsheet consistant of three columns: order id, task name, estimated time of completion.  The data will be displayed on the screen, we should be able to change the order of the tasks by drag and drop.  The UI must have an estimated start time and the task start time and end time for each will be calculated and displayed.  When changing the order of the tasks, the task start time and task end times will be recalculated."
 
+## Clarifications
+
+### Session 2025-01-27
+
+- Q: What is the time unit for estimated duration? → A: Hours and minutes in HH:MM format (e.g., 2:30 for 2 hours 30 minutes)
+- Q: How should system handle invalid or missing data in Excel import? → A: Skip invalid rows, display summary of valid vs invalid rows imported
+- Q: How should system handle zero or negative durations? → A: Auto-correct negative to zero during import, reject zero durations and skip those rows
+- Q: How should system handle duplicate order IDs? → A: Auto-increment duplicate order IDs to make them unique
+- Q: How should new Excel import handle existing tasks? → A: Merge new data with existing tasks (append new tasks, preserve manual order)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Import Excel and View Task Schedule (Priority: P1)
@@ -55,21 +65,25 @@ A user can change the estimated start time for the entire schedule, and all task
 
 ### Edge Cases
 
-- What happens when Excel file has missing or invalid data in required columns?
-- How does system handle very large Excel files with hundreds of tasks?
-- What happens when estimated time of completion is zero or negative?
-- How does system handle duplicate order IDs in the Excel file?
-- What happens when estimated start time is changed to a time in the past?
-- How does system handle tasks with very long estimated durations (days/weeks)?
-- What happens when a user imports a new Excel file while existing tasks are displayed?
-- How does system handle Excel files with additional columns that aren't used?
+- **Invalid/missing data**: When Excel file has missing or invalid data in required columns, system skips those rows and displays a summary of valid vs invalid rows imported
+- **Large files**: System handles very large Excel files with hundreds of tasks (performance targets apply)
+- **Zero/negative durations**: Negative values are auto-corrected to zero; zero durations are rejected and those rows are skipped during import
+- **Duplicate order IDs**: Duplicate order IDs are auto-incremented to ensure each task has a unique identifier
+- **Past start time**: What happens when estimated start time is changed to a time in the past?
+- **Long durations**: How does system handle tasks with very long estimated durations (days/weeks)?
+- **New file import**: New Excel import merges data with existing tasks (appends new tasks, preserves existing manual order and schedule settings)
+- **Additional columns**: How does system handle Excel files with additional columns that aren't used?
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: System MUST accept Excel spreadsheets (.xlsx format) containing three columns: order id, task name, estimated time of completion
+- **FR-001**: System MUST accept Excel spreadsheets (.xlsx format) containing three columns: order id, task name, estimated time of completion (in HH:MM format)
 - **FR-002**: System MUST parse and extract data from all rows in the Excel file
+- **FR-002a**: System MUST validate that estimated time values are in HH:MM format and skip rows with invalid time formats
+- **FR-002c**: System MUST auto-correct negative duration values to zero and then reject rows with zero duration (skip those rows)
+- **FR-002d**: System MUST auto-increment duplicate order IDs to ensure each task has a unique order identifier
+- **FR-002b**: System MUST display an import summary showing number of valid rows imported and number of invalid rows skipped
 - **FR-003**: System MUST display all imported tasks in a list or grid view on screen
 - **FR-004**: System MUST provide a user interface element to set the estimated start time for the entire schedule
 - **FR-005**: System MUST calculate start time for each task based on: estimated start time plus cumulative duration of all preceding tasks in current order
@@ -81,12 +95,12 @@ A user can change the estimated start time for the entire schedule, and all task
 - **FR-011**: System MUST provide visual feedback during drag and drop operations to show where the task will be placed
 - **FR-012**: System MUST preserve the task order in persistent storage (local browser storage)
 - **FR-013**: System MUST maintain data integrity when browser is closed and reopened (retrieve tasks and current order from storage)
-- **FR-014**: System MUST handle import of new Excel files, replacing existing task data with new data from the file
+- **FR-014**: System MUST handle import of new Excel files, merging new data with existing tasks (append new tasks while preserving existing manual order)
 
 ### Key Entities *(include if feature involves data)*
 
-- **Task**: Represents a single work item with orderId (sequence identifier), taskName (descriptive name), and estimatedDuration (time to complete in hours/minutes). Tasks are displayed in chronological order with calculated start and end times.
-- **Schedule**: Contains the estimatedStartTime (user-configured start point for entire schedule) and maintains the current order of all tasks. The schedule determines how times are calculated for all tasks.
+- **Task**: Represents a single work item with orderId (sequence identifier), taskName (descriptive name), and estimatedDuration (time to complete in HH:MM format, e.g., 2:30 for 2 hours 30 minutes). Tasks are displayed in chronological order with calculated start and end times.
+- **Schedule**: Contains the estimatedStartTime (user-configured start point for entire schedule in HH:MM format) and maintains the current order of all tasks. The schedule determines how times are calculated for all tasks.
 
 ## Success Criteria *(mandatory)*
 
