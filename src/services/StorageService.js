@@ -176,5 +176,59 @@ class StorageService {
   setTaskOrder(order) {
     localStorage.setItem('taskOrder', JSON.stringify(order));
   }
+
+  /**
+   * Reset all application data
+   * Clears IndexedDB tasks and all localStorage entries
+   * @returns {Promise<Object>} Result object with success status and errors
+   * @example
+   * const result = await storageService.resetAll();
+   * if (result.success) {
+   *   console.log('Reset complete');
+   * } else {
+   *   console.error('Errors:', result.errors);
+   * }
+   */
+  async resetAll() {
+    const errors = [];
+    const cleared = { indexedDB: false, localStorage: false };
+
+    // Clear IndexedDB tasks
+    try {
+      if (!this.db) {
+        throw new Error('Database not initialized');
+      }
+
+      const tx = this.db.transaction('tasks', 'readwrite');
+      const store = tx.objectStore('tasks');
+      await store.clear();
+
+      // Wait for transaction to complete
+      await new Promise((resolve, reject) => {
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+      });
+
+      cleared.indexedDB = true;
+    } catch (err) {
+      errors.push(`IndexedDB: ${err.message}`);
+    }
+
+    // Clear localStorage keys
+    try {
+      localStorage.removeItem('taskOrder');
+      localStorage.removeItem('estimatedStartTime');
+      localStorage.removeItem('importHistory');
+      cleared.localStorage = true;
+    } catch (err) {
+      errors.push(`localStorage: ${err.message}`);
+    }
+
+    return {
+      success: errors.length === 0,
+      errors,
+      cleared
+    };
+  }
 }
 

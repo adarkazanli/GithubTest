@@ -13,8 +13,10 @@
     <div class="import-controls">
       <input type="file" id="excel-file" accept=".xlsx" />
       <button id="import-btn">Import Excel</button>
+      <button id="reset-button" type="button" class="btn-reset" aria-label="Clear all application data">Reset All Data</button>
     </div>
     <div id="import-summary"></div>
+    <div id="reset-messages" class="message-container" aria-live="polite"></div>
   </section>
 
   <!-- Schedule Controls -->
@@ -29,6 +31,22 @@
     <!-- Tasks will be rendered here dynamically -->
   </section>
 
+  <!-- Confirmation Dialog -->
+  <div id="reset-dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+    <div class="dialog-backdrop"></div>
+    <div class="dialog-content">
+      <h2 id="dialog-title">Confirm Reset</h2>
+      <p class="dialog-message">
+        This will permanently delete all your task data and cannot be undone.
+        Are you sure you want to continue?
+      </p>
+      <div class="dialog-actions">
+        <button type="button" class="btn-secondary" id="dialog-cancel">Cancel</button>
+        <button type="button" class="btn-danger" id="dialog-confirm">Delete All Data</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Load SheetJS -->
   <script src="assets/lib/xlsx.full.min.js"></script>
   
@@ -38,7 +56,8 @@
   <script src="src/services/StorageService.js"></script>
   <script src="src/services/TaskCalculator.js"></script>
   <script src="src/services/ExcelImporter.js"></script>
-  
+  <script src="src/components/ResetButton.js"></script>
+
   <!-- Main application -->
   <script src="src/main.js"></script>
 </body>

@@ -6,6 +6,7 @@
 let storageService;
 let currentTasks = [];
 let dragSource = null;
+let resetButton;
 
 // Initialize application on load
 document.addEventListener('DOMContentLoaded', async () => {
@@ -26,6 +27,35 @@ async function init() {
 
     // Setup event listeners
     setupEventListeners();
+
+    // Initialize ResetButton
+    if (typeof ResetButton !== 'undefined') {
+      resetButton = new ResetButton(storageService, {
+        onResetComplete: () => {
+          // Clear current tasks array
+          currentTasks = [];
+
+          // Show empty state
+          showEmptyState();
+
+          // Clear import summary
+          const importSummary = document.getElementById('import-summary');
+          if (importSummary) {
+            importSummary.innerHTML = '';
+          }
+
+          console.log('Reset complete - all data cleared');
+        },
+        onResetError: (errors) => {
+          console.error('Reset errors:', errors);
+        },
+        isImportInProgress: () => {
+          return document.body.classList.contains('loading');
+        }
+      });
+
+      resetButton.init();
+    }
 
     // Initial render
     if (currentTasks.length > 0) {

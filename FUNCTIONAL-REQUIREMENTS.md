@@ -431,6 +431,120 @@ For all tasks:
 
 ---
 
+### 3.11 Database Reset Functionality
+
+#### FR-3.11.1 Reset Button Placement
+**Requirement:** The system shall provide a reset button positioned next to the import button in the control panel.
+
+**Acceptance Criteria:**
+- Reset button appears in import controls area
+- Button is clearly labeled "Reset All Data"
+- Button has distinctive warning color (red)
+- Button is visible on all screen sizes
+- Button is disabled during import operations
+
+#### FR-3.11.2 Confirmation Dialog
+**Requirement:** Before executing reset, the system shall display a modal confirmation dialog.
+
+**Acceptance Criteria:**
+- Dialog appears centered on screen with semi-transparent backdrop
+- Dialog blocks interaction with rest of page
+- Dialog message states: "This will permanently delete all your task data and cannot be undone"
+- Dialog provides two buttons: "Cancel" (secondary) and "Delete All Data" (danger/red)
+- Cancel button is focused by default for safe default behavior
+- Escape key closes dialog without executing reset
+- Clicking backdrop does not close dialog (user must explicitly choose)
+
+#### FR-3.11.3 Data Clearing
+**Requirement:** The reset operation shall clear all application data from browser storage.
+
+**Acceptance Criteria:**
+- All tasks are removed from IndexedDB tasks store
+- taskOrder is removed from localStorage
+- estimatedStartTime is removed from localStorage
+- importHistory is removed from localStorage
+- Database schema is preserved (not deleted)
+- Operation completes in under 5 seconds for typical datasets
+
+#### FR-3.11.4 Error Handling
+**Requirement:** The reset operation shall handle storage errors gracefully.
+
+**Acceptance Criteria:**
+- Errors from IndexedDB are caught and reported separately
+- Errors from localStorage are caught and reported separately
+- Partial failures complete clearing of successful storage areas
+- Error messages specify which storage area failed
+- User receives detailed error feedback with suggested actions
+- Failed operations can be retried
+
+#### FR-3.11.5 Visual Feedback
+**Requirement:** The system shall provide clear visual feedback during and after reset operations.
+
+**Acceptance Criteria:**
+- Success message displays: "✓ All data cleared successfully"
+- Success message uses green color scheme
+- Error message displays: "⚠️ Reset partially failed: [error details]"
+- Error message uses red color scheme
+- Messages include dismiss button (× icon)
+- Messages auto-dismiss after 5 seconds
+- Messages have ARIA attributes for screen reader support (role="alert", aria-live="polite")
+- Empty state message displays after successful reset
+
+#### FR-3.11.6 Button State Management
+**Requirement:** The reset button shall be disabled during operations to prevent concurrent executions.
+
+**Acceptance Criteria:**
+- Button disables immediately when clicked
+- Button remains disabled until confirmation is resolved (confirm or cancel)
+- Button re-enables after operation completes (success or error)
+- Disabled state shows reduced opacity and "not-allowed" cursor
+- Button stays disabled during Excel import operations
+- Tooltip "Reset unavailable during import" displays when disabled during import
+
+#### FR-3.11.7 UI State Management
+**Requirement:** After successful reset, the UI shall update to reflect the empty state.
+
+**Acceptance Criteria:**
+- Task list clears and shows empty state message
+- Import summary clears
+- Schedule start time resets to default (09:00)
+- Page does not require manual refresh
+- All UI updates occur automatically after reset callback fires
+
+#### FR-3.11.8 Keyboard Accessibility
+**Requirement:** The reset feature shall be fully accessible via keyboard navigation.
+
+**Acceptance Criteria:**
+- Reset button is reachable via Tab key
+- Enter or Space key activates reset button
+- Dialog buttons are reachable via Tab key within dialog
+- Escape key cancels dialog
+- Focus returns to reset button after dialog closes
+- All interactive elements have visible focus indicators
+
+#### FR-3.11.9 Mobile Responsiveness
+**Requirement:** The reset feature shall work correctly on mobile devices.
+
+**Acceptance Criteria:**
+- Reset button layout adapts to mobile screens (stacks vertically if needed)
+- Dialog is responsive (full width with padding on screens < 768px)
+- Dialog buttons stack vertically on mobile
+- Touch targets meet minimum size (44x44px)
+- Dialog scrolls if content exceeds viewport height
+- Confirmation works with touch events
+
+#### FR-3.11.10 Data Persistence Validation
+**Requirement:** The system shall verify that reset operations actually clear browser storage.
+
+**Acceptance Criteria:**
+- IndexedDB tasks store is empty after reset (verified via DevTools)
+- localStorage keys (taskOrder, estimatedStartTime, importHistory) are removed (verified via DevTools)
+- No residual task data remains in any storage area
+- Subsequent page load shows empty state
+- Re-importing tasks works correctly after reset
+
+---
+
 ## 4. Non-Functional Requirements
 
 ### 4.1 Performance Requirements
