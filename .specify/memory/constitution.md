@@ -67,14 +67,29 @@ All JavaScript libraries, CSS frameworks, and fonts MUST either be bundled with 
 - All code MUST be browser-compatible (no Node.js-only APIs in runtime)
 
 ### Testing Requirements
+
 - Manual testing on Chrome, Firefox, Safari (desktop + mobile)
 - Test offline functionality by disabling network
 - Test Excel import/export with real .xlsx files
 - Validate responsive design at multiple viewport sizes
 
+### Documentation Consistency (REQUIRED)
+
+Before every commit, ensure FUNCTIONAL-REQUIREMENTS.md is up to date and consistent with code changes:
+
+- **New Features**: Add corresponding functional requirements sections
+- **Modified Features**: Update existing requirements to reflect implementation changes
+- **Bug Fixes**: Verify requirements accurately describe corrected behavior
+- **Breaking Changes**: Update acceptance criteria and validation rules
+- **UI Changes**: Update UI requirements and component styling specifications
+- **Data Model Changes**: Update data entity definitions and validation rules
+
+The FUNCTIONAL-REQUIREMENTS.md serves as the authoritative reference for all system capabilities. Code and documentation MUST remain synchronized at all times.
+
 ### Version Control
 - Commit static output files (dist/ folder) to enable GitHub Pages hosting
 - Or document CDN deployment process for non-Git workflows
+- MUST include FUNCTIONAL-REQUIREMENTS.md updates in the same commit as related code changes
 
 ## Governance
 
