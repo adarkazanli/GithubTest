@@ -89,6 +89,8 @@ A user can change the estimated start time for the entire schedule, and all task
 - **FR-005**: System MUST calculate start time for each task based on: estimated start time plus cumulative duration of all preceding tasks in current order
 - **FR-006**: System MUST calculate end time for each task as: task start time plus task estimated duration
 - **FR-007**: System MUST display for each task: task name, start time, end time, and estimated duration
+- **FR-007a**: System MUST allow users to add, edit, and display notes for each task
+- **FR-007b**: System MUST persist task notes in browser storage and restore them on page reload
 - **FR-008**: System MUST allow users to reorder tasks by drag and drop interaction
 - **FR-009**: System MUST recalculate all task start and end times whenever tasks are reordered via drag and drop
 - **FR-010**: System MUST recalculate all task start and end times whenever the estimated start time is changed
@@ -99,7 +101,7 @@ A user can change the estimated start time for the entire schedule, and all task
 
 ### Key Entities *(include if feature involves data)*
 
-- **Task**: Represents a single work item with orderId (sequence identifier), taskName (descriptive name), and estimatedDuration (time to complete in HH:MM format, e.g., 2:30 for 2 hours 30 minutes). Tasks are displayed in chronological order with calculated start and end times.
+- **Task**: Represents a single work item with orderId (sequence identifier), taskName (descriptive name), estimatedDuration (time to complete in HH:MM format, e.g., 2:30 for 2 hours 30 minutes), and notes (optional user-entered text for additional context). Tasks are displayed in chronological order with calculated start and end times.
 - **Schedule**: Contains the estimatedStartTime (user-configured start point for entire schedule in HH:MM format) and maintains the current order of all tasks. The schedule determines how times are calculated for all tasks.
 
 ## Success Criteria *(mandatory)*
