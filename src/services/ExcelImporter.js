@@ -87,7 +87,11 @@ class ExcelImporter {
         }
 
         // Create task
-        const task = new Task(orderId, taskName, estimatedTime);
+        const task = new Task({
+          orderId,
+          taskName,
+          estimatedDuration: TimeUtils.parseToMinutes(estimatedTime)
+        });
         validRows.push(task);
       } catch (error) {
         invalidRows.push({

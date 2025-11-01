@@ -216,3 +216,5 @@ class ResetButton {
     }, 5000);
   }
 }
+
+export default ResetButton;

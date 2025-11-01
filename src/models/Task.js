@@ -110,6 +110,22 @@ class Task {
   setNotes(notes) {
     this.notes = notes || '';
   }
+
+  /**
+   * Get formatted start time
+   * @returns {string} Formatted start time or '--:--' if not set
+   */
+  getFormattedStartTime() {
+    return this.startTime || '--:--';
+  }
+
+  /**
+   * Get formatted end time
+   * @returns {string} Formatted end time or '--:--' if not set
+   */
+  getFormattedEndTime() {
+    return this.endTime || '--:--';
+  }
 }
 
 // Export for ES module compatibility

@@ -1,3 +1,5 @@
+import Task from '../models/Task.js';
+
 /**
  * StorageService - Manages IndexedDB and localStorage
  * Handles task persistence and schedule settings
@@ -86,9 +88,15 @@ class StorageService {
       
       if (taskData) {
         // Reconstruct as Task instance
-        const task = new Task(taskData.orderId, taskData.taskName, taskData.estimatedDuration);
-        task.id = taskData.id;
-        task.notes = taskData.notes || '';
+        const task = new Task({
+          id: taskData.id,
+          orderId: taskData.orderId,
+          taskName: taskData.taskName,
+          estimatedDuration: taskData.estimatedDuration,
+          notes: taskData.notes || '',
+          startTime: taskData.startTime,
+          endTime: taskData.endTime
+        });
         task.calculatedStartTime = taskData.calculatedStartTime ? new Date(taskData.calculatedStartTime) : null;
         task.calculatedEndTime = taskData.calculatedEndTime ? new Date(taskData.calculatedEndTime) : null;
         tasks.push(task);
@@ -231,4 +239,6 @@ class StorageService {
     };
   }
 }
+
+export default StorageService;
 
