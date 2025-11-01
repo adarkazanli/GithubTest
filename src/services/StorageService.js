@@ -1,3 +1,5 @@
+import Task from '../models/Task.js';
+
 /**
  * StorageService - Manages IndexedDB and localStorage
  * Handles task persistence and schedule settings
@@ -227,8 +229,9 @@ class StorageService {
     return {
       success: errors.length === 0,
       errors,
-      cleared
+      cleared,
     };
   }
 }
 
+export default StorageService;

@@ -40,9 +40,12 @@ Desktop.ini
 .cache/
 tmp/
 
-# Coverage
+# Testing
 coverage/
 *.lcov
+playwright-report/
+test-results/
+.playwright/
 
 # Package manager files
 package-lock.json

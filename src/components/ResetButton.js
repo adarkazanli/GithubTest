@@ -12,7 +12,7 @@ class ResetButton {
       onResetComplete: null,
       onResetError: null,
       isImportInProgress: () => false,
-      ...options
+      ...options,
     };
 
     this.isResetting = false;
@@ -216,3 +216,5 @@ class ResetButton {
     }, 5000);
   }
 }
+
+export default ResetButton;

@@ -1,3 +1,6 @@
+import TimeUtils from '../utils/TimeUtils.js';
+import Task from '../models/Task.js';
+
 /**
  * ExcelImporter - Handles Excel file parsing and validation
  * Uses SheetJS for client-side Excel parsing
@@ -55,7 +58,6 @@ class ExcelImporter {
    * @returns {Object} Object with tasks array and summary
    */
   static validateAndParse(rawData, fileName = 'unknown.xlsx') {
-    const tasks = [];
     const validRows = [];
     const invalidRows = [];
 
@@ -65,8 +67,8 @@ class ExcelImporter {
         summary: {
           valid: 0,
           invalid: 0,
-          fileName: fileName
-        }
+          fileName: fileName,
+        },
       };
     }
 
@@ -90,7 +92,7 @@ class ExcelImporter {
         invalidRows.push({
           row: index + 1,
           error: error.message,
-          data: row
+          data: row,
         });
       }
     });
@@ -104,8 +106,8 @@ class ExcelImporter {
         valid: validRows.length,
         invalid: invalidRows.length,
         fileName: fileName,
-        invalidDetails: invalidRows
-      }
+        invalidDetails: invalidRows,
+      },
     };
   }
 
@@ -189,3 +191,4 @@ class ExcelImporter {
   }
 }
 
+export default ExcelImporter;

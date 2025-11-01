@@ -21,8 +21,8 @@ class TimeUtils {
     
     const hours = parseInt(match[1], 10);
     const minutes = parseInt(match[2], 10);
-    
-    if (hours < 0 || minutes < 0 || minutes >= 60) {
+
+    if (hours < 0 || hours > 23 || minutes < 0 || minutes >= 60) {
       throw new Error(`Invalid time range: ${timeStr}`);
     }
     
@@ -76,8 +76,9 @@ class TimeUtils {
     
     const hours = parseInt(match[1], 10);
     const minutes = parseInt(match[2], 10);
-    
-    return hours >= 0 && minutes >= 0 && minutes < 60;
+
+    return hours >= 0 && hours <= 23 && minutes >= 0 && minutes < 60;
   }
 }
 
+export default TimeUtils;

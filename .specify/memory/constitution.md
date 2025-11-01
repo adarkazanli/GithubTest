@@ -1,22 +1,26 @@
 <!--
   Sync Impact Report:
-  
-  Version Change: N/A → 1.0.0 (initial creation)
-  
-  Modified Principles: N/A (initial constitution)
-  
-  Added Sections:
-  - Core Principles (5 principles)
-  - Technical Constraints
-  - Development Workflow
-  - Governance
-  
+
+  Version Change: 1.0.0 → 1.1.0 (test automation introduction)
+
+  Modified Sections:
+  - Technical Constraints: Added Test Automation stack requirements
+  - Testing Requirements: Replaced manual-only with automated + manual strategy
+
+  Rationale:
+  Introducing automated testing to improve code quality, catch regressions early,
+  and enable confident refactoring while maintaining static-only architecture.
+
   Templates requiring updates:
   - ✅ Updated: plan-template.md alignment maintained
   - ✅ Updated: spec-template.md alignment maintained
   - ✅ Updated: tasks-template.md alignment maintained
-  
-  Follow-up TODOs: None
+
+  Follow-up TODOs:
+  - Set up Vitest configuration
+  - Set up Playwright configuration
+  - Add ESLint configuration
+  - Create initial test examples
 -->
 
 # DataSheet Pro Constitution
@@ -46,6 +50,8 @@ All JavaScript libraries, CSS frameworks, and fonts MUST either be bundled with 
 - **Excel Processing**: Client-side library (SheetJS xlsx recommended)
 - **Storage**: IndexedDB preferred for large datasets, localStorage for configuration
 - **No Frameworks**: Vanilla JS or light framework (Vue/React) that bundles completely
+- **Test Automation**: Vitest for unit/integration tests, Playwright for E2E tests
+- **Code Quality**: ESLint for linting, must pass all tests before commits
 
 ### Deployment Constraints
 - MUST deploy as static files (index.html + assets/)
@@ -68,10 +74,54 @@ All JavaScript libraries, CSS frameworks, and fonts MUST either be bundled with 
 
 ### Testing Requirements
 
-- Manual testing on Chrome, Firefox, Safari (desktop + mobile)
-- Test offline functionality by disabling network
-- Test Excel import/export with real .xlsx files
-- Validate responsive design at multiple viewport sizes
+#### Automated Testing (REQUIRED)
+
+All code changes MUST include appropriate automated tests:
+
+**Unit Tests** (Vitest):
+- Test utility functions (TimeUtils, validators, formatters)
+- Test model classes (Task) and their methods
+- Test calculation logic in isolation
+- Minimum 80% code coverage for utilities and models
+- Run in jsdom/happy-dom environment (no real browser needed)
+
+**Integration Tests** (Vitest + Browser APIs):
+- Test StorageService with IndexedDB and localStorage
+- Test ExcelService with real .xlsx file parsing
+- Test data persistence and reconstruction
+- Mock browser APIs where necessary
+
+**End-to-End Tests** (Playwright):
+- Test complete user workflows (import, reorder, adjust times)
+- Test drag-and-drop interactions on desktop
+- Test mobile touch interactions
+- Test database reset flow with confirmation
+- Run on Chrome, Firefox, and Safari (WebKit)
+- Include visual regression tests for critical UI components
+
+**Code Quality** (ESLint):
+- Enforce consistent code style
+- Catch common errors and anti-patterns
+- Ensure ES6+ best practices
+- Must pass linting before commits
+
+**Pre-commit Requirements**:
+- All unit tests must pass
+- All integration tests must pass
+- ESLint must pass with no errors
+- Code coverage must meet minimums
+- E2E tests should pass (run in CI, not blocking for local commits)
+
+#### Manual Testing (SUPPLEMENTAL)
+
+Manual testing supplements automated tests for subjective qualities:
+
+- Visual design review on Chrome, Firefox, Safari (desktop + mobile)
+- Responsive layout verification at key breakpoints (320px, 768px, 1024px, 1920px)
+- Offline functionality verification (disable network, test full workflow)
+- Real Excel file imports from various sources (Excel, Google Sheets, LibreOffice)
+- Accessibility review (keyboard navigation, screen reader compatibility)
+- Performance profiling (page load, import speed, calculation speed)
 
 ### Documentation Consistency (REQUIRED)
 
@@ -105,4 +155,4 @@ Compliance verification:
 - Reject PRs that violate NON-NEGOTIABLE principles
 - Document justification for any principle-related complexity
 
-**Version**: 1.0.0 | **Ratified**: 2025-01-27 | **Last Amended**: 2025-01-27
+**Version**: 1.1.0 | **Ratified**: 2025-01-27 | **Last Amended**: 2025-11-01

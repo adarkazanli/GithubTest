@@ -1,1 +1,36 @@
-{}
+{
+  "name": "task-scheduler",
+  "version": "1.0.0",
+  "description": "A static single-page application for importing Excel spreadsheets and managing task schedules",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "precommit": "npm run lint && npm run test",
+    "install:browsers": "playwright install"
+  },
+  "keywords": [
+    "task-scheduler",
+    "excel",
+    "static",
+    "vanilla-js"
+  ],
+  "author": "",
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@vitest/ui": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.16.0",
+    "happy-dom": "^15.11.7",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {}
+}

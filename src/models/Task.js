@@ -1,3 +1,5 @@
+import TimeUtils from '../utils/TimeUtils.js';
+
 /**
  * Task Model - Represents a single work item
  * @property {string} id - Unique identifier
@@ -97,3 +99,4 @@ class Task {
   }
 }
 
+export default Task;

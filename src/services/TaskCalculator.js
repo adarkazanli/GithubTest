@@ -1,3 +1,5 @@
+import TimeUtils from '../utils/TimeUtils.js';
+
 /**
  * TaskCalculator - Calculates start and end times for tasks
  * Handles time calculations based on estimated start time and task durations
@@ -73,3 +75,4 @@ class TaskCalculator {
   }
 }
 
+export default TaskCalculator;
