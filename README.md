@@ -72,11 +72,74 @@ Your Excel file must contain 3 columns:
 2. Type your notes
 3. Click away to automatically save
 
+## Running Tests
+
+This project includes a comprehensive test suite with 141 tests covering all critical functionality.
+
+### Test Commands
+
+```bash
+# Install dependencies first
+npm install
+
+# Run all tests
+npm test
+
+# Run tests in watch mode (auto-reruns on changes)
+npm run test:watch
+
+# Run tests with interactive UI
+npm run test:ui
+
+# Generate coverage report
+npm run coverage
+
+# Run in CI mode (verbose output)
+npm run test:ci
+```
+
+### Test Structure
+
+- **Unit Tests** (87 tests): Individual module testing
+  - TimeUtils, Task Model, TaskCalculator
+  - StorageService, ExcelImporter, ResetButton
+
+- **Integration Tests** (54 tests): Complete workflow testing
+  - Excel Import, Reset, Time Update, Task Reordering
+
+### Running Specific Tests
+
+```bash
+# Run only unit tests
+npx vitest tests/unit/
+
+# Run only integration tests
+npx vitest tests/integration/
+
+# Run a specific test file
+npx vitest tests/unit/models/Task.test.js
+
+# Run tests matching a pattern
+npx vitest -t "should calculate"
+```
+
+### Test Coverage
+
+The test suite maintains high coverage:
+- **87.85%** statement coverage
+- **95.45%** branch coverage
+- **75%** function coverage
+
+View detailed coverage reports at `coverage/index.html` after running `npm run coverage`.
+
+For more information, see [tests/README.md](tests/README.md).
+
 ## Technical Details
 
 - **Technology**: Vanilla JavaScript, HTML5, CSS3
 - **Storage**: IndexedDB for tasks, localStorage for settings
 - **Excel Processing**: SheetJS (xlsx.js) client-side
+- **Testing**: Vitest + JSDOM with comprehensive test coverage
 - **No Backend**: Fully offline-capable static application
 
 ## License

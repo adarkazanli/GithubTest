@@ -44,6 +44,9 @@ tmp/
 coverage/
 *.lcov
 
+# Vitest cache
+.vitest/
+
 # Package manager files
 package-lock.json
 yarn.lock

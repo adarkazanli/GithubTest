@@ -1287,7 +1287,103 @@ The following features are explicitly **out of scope** for the current version:
 
 ---
 
-## 12. Approval
+## 12. Automated Testing
+
+### 12.1 Test Suite Overview
+The application includes a comprehensive automated test suite with 141 tests covering all critical functionality through unit and integration testing.
+
+### 12.2 Test Coverage Requirements
+
+#### 12.2.1 Coverage Thresholds
+- **Minimum Statement Coverage**: 75%
+- **Minimum Branch Coverage**: 75%
+- **Minimum Function Coverage**: 60%
+- **Current Achievement**: 87.85% statements, 95.45% branches, 75% functions
+
+#### 12.2.2 Tested Components
+All critical business logic modules must maintain test coverage:
+- TimeUtils (time parsing and calculations)
+- Task Model (data validation and serialization)
+- TaskCalculator (schedule calculations)
+- StorageService (data persistence)
+- ExcelImporter (file parsing and validation)
+- ResetButton (UI component logic)
+
+### 12.3 Test Execution
+
+#### 12.3.1 Test Commands
+```bash
+npm test              # Run all tests
+npm run test:watch    # Watch mode for development
+npm run test:ui       # Interactive UI
+npm run coverage      # Generate coverage report
+npm run test:ci       # CI mode with verbose output
+```
+
+#### 12.3.2 Test Types
+
+**Unit Tests** (87 tests)
+- Individual module testing in isolation
+- Fast execution (< 1 second)
+- Mock external dependencies
+- Located in `tests/unit/`
+
+**Integration Tests** (54 tests)
+- Complete workflow testing
+- Multi-component interaction
+- End-to-end data flow validation
+- Located in `tests/integration/`
+
+#### 12.3.3 Test Workflows Covered
+1. **Excel Import Workflow**: File upload → parse → validate → store → display
+2. **Task Reordering Workflow**: Drag → drop → recalculate times → persist
+3. **Time Update Workflow**: Change start time → recalculate all → save
+4. **Database Reset Workflow**: Confirm → clear data → update UI → callback
+
+### 12.4 Continuous Integration
+
+#### 12.4.1 CI Requirements
+- Tests must pass in Node.js 18+ environment
+- All tests must execute successfully offline (no network dependencies)
+- Test suite must complete in under 10 seconds
+- Coverage thresholds must be met
+
+#### 12.4.2 GitHub Actions Integration
+A sample CI workflow is provided at `.github/workflows/test.yml` that:
+- Runs tests on multiple Node.js versions (18.x, 20.x)
+- Generates coverage reports
+- Uploads coverage artifacts
+- Fails build if tests fail or coverage drops below threshold
+
+### 12.5 Test Maintenance
+
+#### 12.5.1 Adding New Tests
+When adding new functionality:
+1. Write unit tests first (TDD approach)
+2. Ensure new code meets coverage thresholds
+3. Add integration tests for new workflows
+4. Update test documentation
+
+#### 12.5.2 Test Quality Standards
+All tests must:
+- Follow AAA pattern (Arrange, Act, Assert)
+- Have descriptive names explaining what they verify
+- Be independent (no test dependencies)
+- Clean up after execution (proper teardown)
+- Execute quickly (< 100ms per unit test)
+
+### 12.6 Viewing Coverage Reports
+After running `npm run coverage`, open `coverage/index.html` in a browser to view:
+- Line-by-line coverage highlighting
+- Function coverage details
+- Branch coverage analysis
+- File-level coverage metrics
+
+For detailed test documentation, see `tests/README.md`.
+
+---
+
+## 13. Approval
 
 | Role | Name | Signature | Date |
 |------|------|-----------|------|
