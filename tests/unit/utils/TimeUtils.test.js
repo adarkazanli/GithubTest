@@ -19,13 +19,20 @@ describe('TimeUtils', () => {
     });
 
     test('should return false for invalid formats', () => {
-      expect(TimeUtils.isValidTimeFormat('9:00')).toBe(false);   // Single digit hour
       expect(TimeUtils.isValidTimeFormat('09:0')).toBe(false);   // Single digit minute
+      expect(TimeUtils.isValidTimeFormat('9:0')).toBe(false);    // Single digit minute
       expect(TimeUtils.isValidTimeFormat('25:00')).toBe(false);  // Invalid hour
       expect(TimeUtils.isValidTimeFormat('09:60')).toBe(false);  // Invalid minute
       expect(TimeUtils.isValidTimeFormat('abc')).toBe(false);    // Non-numeric
       expect(TimeUtils.isValidTimeFormat('')).toBe(false);       // Empty string
       expect(TimeUtils.isValidTimeFormat(null)).toBe(false);     // Null
+    });
+
+    test('should accept both single and double digit hours', () => {
+      expect(TimeUtils.isValidTimeFormat('9:00')).toBe(true);    // Single digit hour
+      expect(TimeUtils.isValidTimeFormat('09:00')).toBe(true);   // Double digit hour
+      expect(TimeUtils.isValidTimeFormat('1:30')).toBe(true);    // Single digit hour
+      expect(TimeUtils.isValidTimeFormat('01:30')).toBe(true);   // Double digit hour
     });
 
     test('should handle edge cases', () => {

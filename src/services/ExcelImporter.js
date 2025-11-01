@@ -1,3 +1,6 @@
+import TimeUtils from '../utils/TimeUtils.js';
+import Task from '../models/Task.js';
+
 /**
  * ExcelImporter - Handles Excel file parsing and validation
  * Uses SheetJS for client-side Excel parsing
@@ -141,21 +144,43 @@ class ExcelImporter {
   }
 
   /**
-   * Validate estimated time
-   * @param {any} estimatedTime - Time value in HH:MM format
-   * @returns {string} Valid time string
+   * Validate estimated time - accepts both Excel time format (decimal) and HH:MM text
+   * @param {any} estimatedTime - Time value as Excel decimal (0.0625) or HH:MM string ("1:30")
+   * @returns {string} Valid time string in HH:MM format
    */
   static validateEstimatedTime(estimatedTime) {
-    if (!estimatedTime || typeof estimatedTime !== 'string') {
+    if (estimatedTime === null || estimatedTime === undefined) {
       throw new Error('Missing estimatedTime');
     }
 
-    // Validate format
-    if (!TimeUtils.isValidTimeFormat(estimatedTime)) {
-      throw new Error(`Invalid time format: ${estimatedTime}. Expected HH:MM`);
+    let timeString;
+
+    // Handle Excel time format (decimal number between 0 and 1)
+    if (typeof estimatedTime === 'number') {
+      // Excel stores time as fraction of a day (e.g., 0.0625 = 1:30)
+      // Convert to total minutes first to avoid rounding errors
+      const totalMinutes = Math.round(estimatedTime * 24 * 60);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      // Format as HH:MM
+      timeString = `${hours}:${minutes.toString().padStart(2, '0')}`;
+    }
+    // Handle string format
+    else if (typeof estimatedTime === 'string') {
+      timeString = estimatedTime.trim();
+    }
+    // Invalid type
+    else {
+      throw new Error(`Invalid estimatedTime type: ${typeof estimatedTime}`);
     }
 
-    return estimatedTime.trim();
+    // Validate the final HH:MM format
+    if (!TimeUtils.isValidTimeFormat(timeString)) {
+      throw new Error(`Invalid time format: ${timeString}. Expected HH:MM`);
+    }
+
+    return timeString;
   }
 
   /**
@@ -189,3 +214,4 @@ class ExcelImporter {
   }
 }
 
+export default ExcelImporter;

@@ -3,6 +3,12 @@
  * Orchestrates all components and handles user interactions
  */
 
+import StorageService from './services/StorageService.js';
+import ExcelImporter from './services/ExcelImporter.js';
+import TaskCalculator from './services/TaskCalculator.js';
+import ResetButton from './components/ResetButton.js';
+import TimeUtils from './utils/TimeUtils.js';
+
 let storageService;
 let currentTasks = [];
 let dragSource = null;
@@ -10,7 +16,14 @@ let resetButton;
 
 // Initialize application on load
 document.addEventListener('DOMContentLoaded', async () => {
-  await init();
+  console.log('DOM loaded, initializing app...');
+  try {
+    await init();
+    console.log('App initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize app:', error);
+    alert('App initialization failed: ' + error.message);
+  }
 });
 
 /**
@@ -77,18 +90,27 @@ async function init() {
  * Setup event listeners
  */
 function setupEventListeners() {
+  console.log('Setting up event listeners...');
+
   // Excel file input
   const excelFileInput = document.getElementById('excel-file');
   if (excelFileInput) {
     excelFileInput.addEventListener('change', handleFileImport);
+    console.log('✓ File input listener attached');
+  } else {
+    console.error('✗ File input element not found');
   }
 
   // Import button
   const importBtn = document.getElementById('import-btn');
   if (importBtn) {
     importBtn.addEventListener('click', () => {
+      console.log('Import button clicked');
       excelFileInput.click();
     });
+    console.log('✓ Import button listener attached');
+  } else {
+    console.error('✗ Import button element not found');
   }
 
   // Estimated start time input
@@ -108,14 +130,22 @@ function setupEventListeners() {
  * Handle Excel file import
  */
 async function handleFileImport(event) {
+  console.log('handleFileImport called');
   const file = event.target.files[0];
-  if (!file) return;
+  if (!file) {
+    console.log('No file selected');
+    return;
+  }
+
+  console.log(`Processing file: ${file.name}`);
 
   try {
     showLoadingState(true);
 
     // Import Excel file
+    console.log('Calling ExcelImporter.importFile...');
     const result = await ExcelImporter.importFile(file);
+    console.log('Import result:', result);
 
     // Merge with existing tasks
     currentTasks = [...currentTasks, ...result.tasks];

@@ -69,8 +69,8 @@ class TimeUtils {
       return false;
     }
 
-    // Strict validation: must be exactly HH:MM format (2 digits for both)
-    const match = timeStr.match(/^(\d{2}):(\d{2})$/);
+    // Accept H:MM or HH:MM format (1-2 digits for hours, exactly 2 for minutes)
+    const match = timeStr.match(/^(\d{1,2}):(\d{2})$/);
     if (!match) {
       return false;
     }
@@ -78,7 +78,7 @@ class TimeUtils {
     const hours = parseInt(match[1], 10);
     const minutes = parseInt(match[2], 10);
 
-    return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60;
+    return hours >= 0 && hours <= 23 && minutes >= 0 && minutes < 60;
   }
 
   /**

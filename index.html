@@ -47,19 +47,11 @@
     </div>
   </div>
 
-  <!-- Load SheetJS -->
+  <!-- Load SheetJS (non-module script) -->
   <script src="assets/lib/xlsx.full.min.js"></script>
-  
-  <!-- Load application modules -->
-  <script src="src/utils/TimeUtils.js"></script>
-  <script src="src/models/Task.js"></script>
-  <script src="src/services/StorageService.js"></script>
-  <script src="src/services/TaskCalculator.js"></script>
-  <script src="src/services/ExcelImporter.js"></script>
-  <script src="src/components/ResetButton.js"></script>
 
-  <!-- Main application -->
-  <script src="src/main.js"></script>
+  <!-- Main application (ES6 module) -->
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>
 
