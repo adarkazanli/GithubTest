@@ -470,6 +470,50 @@ input[type="text"]:focus {
   background: transparent;
 }
 
+/* Set to Now Button */
+#set-to-now-btn {
+  /* Base styling - match existing buttons */
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+
+  /* Accessibility - touch targets */
+  min-height: 44px;
+  min-width: 44px;
+
+  /* Mobile optimization */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+
+  transition: all 0.2s ease;
+}
+
+#set-to-now-btn:hover {
+  background-color: #0056b3;
+}
+
+#set-to-now-btn:active {
+  transform: scale(0.98);
+  opacity: 0.8;
+  transition: all 0.1s ease;
+}
+
+#set-to-now-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+#set-to-now-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
 /* Mobile Responsive Styles for Dialog */
 @media (max-width: 767px) {
   .dialog-content {
