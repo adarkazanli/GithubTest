@@ -124,6 +124,12 @@ function setupEventListeners() {
   if (updateTimeBtn) {
     updateTimeBtn.addEventListener('click', handleStartTimeChange);
   }
+
+  // Set to Now button
+  const setToNowBtn = document.getElementById('set-to-now-btn');
+  if (setToNowBtn) {
+    setToNowBtn.addEventListener('click', handleSetToNowClick);
+  }
 }
 
 /**
@@ -184,7 +190,7 @@ async function handleFileImport(event) {
  */
 function handleStartTimeChange() {
   const newTime = document.getElementById('estimated-start-time').value;
-  
+
   if (!TimeUtils.isValidTimeFormat(newTime)) {
     alert('Invalid time format. Use HH:MM (e.g., 09:00)');
     document.getElementById('estimated-start-time').value = storageService.getEstimatedStartTime();
@@ -193,6 +199,33 @@ function handleStartTimeChange() {
 
   storageService.setEstimatedStartTime(newTime);
   recalculateAndRender();
+}
+
+/**
+ * Handle "Set to Now" button click
+ * Captures current system time and sets it as estimated start time
+ */
+function handleSetToNowClick() {
+  // Check if import operation is in progress
+  if (document.body.classList.contains('loading')) {
+    return; // Silently ignore if import in progress
+  }
+
+  // Get current time
+  const now = new Date();
+  const formattedTime = TimeUtils.formatDateToTime(now);
+
+  // Update the input field
+  const startTimeInput = document.getElementById('estimated-start-time');
+  if (!startTimeInput) {
+    console.error('Start time input element not found');
+    return;
+  }
+
+  startTimeInput.value = formattedTime;
+
+  // Trigger the existing time change handler
+  handleStartTimeChange();
 }
 
 /**
@@ -426,10 +459,20 @@ function showImportSummary(summary) {
  */
 function showLoadingState(loading) {
   const body = document.body;
+  const setToNowBtn = document.getElementById('set-to-now-btn');
+
   if (loading) {
     body.classList.add('loading');
+    if (setToNowBtn) {
+      setToNowBtn.disabled = true;
+      setToNowBtn.setAttribute('aria-disabled', 'true');
+    }
   } else {
     body.classList.remove('loading');
+    if (setToNowBtn) {
+      setToNowBtn.disabled = false;
+      setToNowBtn.setAttribute('aria-disabled', 'false');
+    }
   }
 }
 
