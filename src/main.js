@@ -87,7 +87,16 @@ async function init() {
 }
 
 /**
- * Setup event listeners
+ * Attach UI event handlers for file import and estimated-start-time controls.
+ *
+ * Binds handlers to the following elements (if present):
+ * - "excel-file": listens for changes and invokes `handleFileImport`.
+ * - "import-btn": clicks the file input to start an import.
+ * - "estimated-start-time": listens for changes and invokes `handleStartTimeChange`.
+ * - "update-time-btn": invokes `handleStartTimeChange` on click.
+ * - "set-to-now-btn": invokes `handleSetToNowClick` on click.
+ *
+ * The function logs successful attachments and reports missing elements via console errors.
  */
 function setupEventListeners() {
   console.log('Setting up event listeners...');
@@ -189,7 +198,10 @@ async function handleFileImport(event) {
 }
 
 /**
- * Handle estimated start time change
+ * Apply the value from the estimated-start-time input as the new estimated start time.
+ *
+ * If the input is a valid `HH:MM` time, updates the stored estimated start time and triggers recalculation and re-rendering.
+ * If the input is invalid, shows an alert and restores the input to the previously stored value.
  */
 function handleStartTimeChange() {
   const newTime = document.getElementById('estimated-start-time').value;
@@ -205,8 +217,9 @@ function handleStartTimeChange() {
 }
 
 /**
- * Handle "Set to Now" button click
- * Captures current system time and sets it as estimated start time
+ * Set the estimated start time input to the current system time and apply the change.
+ *
+ * If an import is in progress (document body has class "loading"), the function returns without modifying state.
  */
 function handleSetToNowClick() {
   // Check if import operation is in progress
@@ -455,7 +468,9 @@ function showImportSummary(summary) {
 }
 
 /**
- * Show loading state
+ * Toggle the application's loading state in the UI.
+ * When enabled, adds the `loading` class to the document body and disables the Set-to-Now button (id `set-to-now-btn`) if present; when disabled, removes the class and re-enables the button.
+ * @param {boolean} loading - `true` to enable loading state, `false` to disable it.
  */
 function showLoadingState(loading) {
   const body = document.body;
@@ -515,4 +530,3 @@ function handleTouchEnd(event) {
   touchStartY = 0;
   touchCurrentY = 0;
 }
-
