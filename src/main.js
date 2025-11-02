@@ -217,9 +217,12 @@ function handleSetToNowClick() {
 
   // Update the input field
   const startTimeInput = document.getElementById('estimated-start-time');
-  if (startTimeInput) {
-    startTimeInput.value = formattedTime;
+  if (!startTimeInput) {
+    console.error('Start time input element not found');
+    return;
   }
+
+  startTimeInput.value = formattedTime;
 
   // Trigger the existing time change handler
   handleStartTimeChange();
@@ -462,11 +465,13 @@ function showLoadingState(loading) {
     body.classList.add('loading');
     if (setToNowBtn) {
       setToNowBtn.disabled = true;
+      setToNowBtn.setAttribute('aria-disabled', 'true');
     }
   } else {
     body.classList.remove('loading');
     if (setToNowBtn) {
       setToNowBtn.disabled = false;
+      setToNowBtn.setAttribute('aria-disabled', 'false');
     }
   }
 }
