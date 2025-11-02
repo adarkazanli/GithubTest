@@ -5,6 +5,15 @@
 **Status**: Draft
 **Input**: User description: "add a button next to set time that will force the start time to be the current time now, all the data should be refreshed as a result"
 
+## Clarifications
+
+### Session 2025-11-01
+
+- Q: What should happen when the user clicks the "Set to Now" button rapidly multiple times? → A: Each click triggers a new recalculation, potentially causing flickering or inconsistent state
+- Q: How should the system handle setting time to "now" when the current time is near midnight (e.g., 23:58) and tasks extend past midnight? → A: Display crosses midnight seamlessly (tasks show times like 00:15, 00:45 on next day) with no special indication
+- Q: What should happen if the system clock is incorrect or unavailable when the user clicks "Set to Now"? → A: Trust the browser's Date object without validation (if clock is wrong, wrong time is used)
+- Q: How should the button behave when an import operation is in progress? → A: Button is disabled during import operations and re-enabled when import completes
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Quick Time Sync (Priority: P1)
@@ -40,10 +49,10 @@ A user wants the convenience of not having to look at a clock and manually type 
 
 ### Edge Cases
 
-- What happens when the user clicks "Set to Now" button rapidly multiple times?
-- How does the system handle setting time to "now" when the current time is near midnight (e.g., 23:58) and tasks extend past midnight?
-- What happens if the system clock is incorrect or unavailable?
-- How does the button behave when an import operation is in progress?
+- **Rapid button clicks**: Each click triggers a new recalculation with the current time at that moment. This may result in multiple rapid updates and potential flickering as the task list re-renders with each click. The system does not debounce or queue these requests.
+- **Midnight rollover**: When the current time is near midnight (e.g., 23:58) and calculated task times extend past midnight, the display seamlessly shows times wrapping to the next day (e.g., 00:15, 00:45) using standard 24-hour time format. No special warning or indication is provided to the user.
+- **Incorrect system clock**: The system trusts the browser's Date object without validation. If the user's system clock is incorrect, the incorrect time will be used for the start time. No validation or error handling is performed.
+- **Concurrent import operation**: The "Set to Now" button is disabled during Excel import operations and automatically re-enabled when the import completes. This prevents data conflicts and state inconsistencies.
 
 ## Requirements *(mandatory)*
 
@@ -57,8 +66,11 @@ A user wants the convenience of not having to look at a clock and manually type 
 - **FR-006**: System MUST persist the new start time to storage so it survives page refreshes
 - **FR-007**: System MUST update the task list display to reflect the newly calculated times immediately after clicking the button
 - **FR-008**: Button MUST be accessible via keyboard navigation and screen readers
-- **FR-009**: System MUST handle rapid button clicks gracefully without causing race conditions or multiple recalculations
-- **FR-010**: Button MUST provide visual feedback when clicked (e.g., brief disabled state or loading indicator)
+- **FR-009**: System MUST allow each button click to trigger a new recalculation with the current time at that moment, without debouncing or disabling the button
+- **FR-010**: Button MUST provide visual feedback when clicked (e.g., visual highlight or animation, but not a disabled state)
+- **FR-011**: System MUST handle midnight rollover seamlessly when task times extend past 23:59, displaying times in next day's 24-hour format (e.g., 00:15, 00:45) without warnings or special indicators
+- **FR-012**: System MUST use the browser's Date object to capture current time without validation, accepting whatever time value is returned by the system clock
+- **FR-013**: System MUST disable the "Set to Now" button during Excel import operations and automatically re-enable it when the import operation completes (successfully or with errors)
 
 ### Key Entities
 
