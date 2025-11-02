@@ -129,9 +129,6 @@ function setupEventListeners() {
   const setToNowBtn = document.getElementById('set-to-now-btn');
   if (setToNowBtn) {
     setToNowBtn.addEventListener('click', handleSetToNowClick);
-    console.log('✓ Set to Now button listener attached');
-  } else {
-    console.error('✗ Set to Now button element not found');
   }
 }
 
